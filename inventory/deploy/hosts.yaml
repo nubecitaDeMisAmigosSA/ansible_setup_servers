@@ -1,0 +1,20 @@
+all:
+  hosts:
+    nubecita.remote:
+      ansible_host: 95.216.189.62
+  vars:
+    ansible_user: root
+    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+    timezone: 'Europe/Madrid'
+
+  children:
+    hetzner:
+      hosts:
+        nubecita.remote:
+          users:
+            larry:
+              sudo: true
+              ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG9K27LQ9VewIvxAcrR01VEw0/IpaRXuO19WhyT9372r larrywtf609@gmail.com"
+            hian:
+              sudo: true
+              ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMO4jL8vJpJyBrSVWi9VGlxR9QnR8FIgoww61Z/91tytbcLFa7FMwjvAbKqZ/2uUHr3ohfMtYX6OvINu1Ya17BGx/NwUwbzBGBn+3AZAPfFyElDtHnKR+q8TfVlJI58KTTdXq7BE0z2ZKtGfuzIQ9gYRBkUF29UeMpMnLAWlqzi8p+ZJjjRzLBp2eKoNjlhTPYoI7wIz2jouY1yRoOv8H4EbCFXXeG6jKdQufyyuv+Gj6eC2bsuOS/cSXYu72nXUnFp5DnrOnJwv3lAG5vsee8qlUC4gV7b2umjmj0tkQ6l0wEW0JVycveGAbYtk5X9jHss9JcdN+LlYrSwbaH+X9T hiancdtrsnm@gmail.com"

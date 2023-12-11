@@ -1,0 +1,64 @@
+---
+# Time
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"
+
+# DNS
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Update the /etc/hosts file with node name
+  lineinfile:
+    path: "/etc/hosts"
+    regexp: "^127.0.1.1.*"
+    line: "127.0.1.1\t{{ inventory_hostname }}"
+    state: present
+    backup: true
+
+- name: Configure Cloudflare DNS
+  copy:
+    src: "resolv.conf"
+    dest: "/etc/resolv.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+# Install Dependencies
+- name: Import install role
+  import_role:
+    name: basic-install
+
+# Log rotation
+- name: Set up logrotate for daemon.log and syslog
+  copy:
+    dest: "/etc/logrotate.d/large_logfiles"
+    content: |
+      /var/log/daemon.log
+      /var/log/syslog
+      {
+        rotate 1
+        weekly
+        missingok
+        notifempty
+        compress
+        delaycompress
+        sharedscripts
+        postrotate
+          /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+        endscript
+      }
+
+# - name: Increase system watchers
+#   become: true
+#   ansible.builtin.sysctl:
+#     name: "{{ item.name }}"
+#     value: "{{ item.value }}"
+#     state: present
+#     reload: yes
+#     sysctl_set: yes
+#     ignoreerrors: no
+#   loop:
+#     - { name: 'fs.inotify.max_user_instances', value: '1280' }
+#     - { name: 'fs.inotify.max_user_watches', value: '1235100' }

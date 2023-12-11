@@ -1,0 +1,14 @@
+---
+# Miscellaneous
+- name: Install dependencies
+  package:
+    name: 
+      - procps
+      - apparmor
+      - micro
+      - gpg
+      - htop
+      - zsh
+      - git
+    state: present
+

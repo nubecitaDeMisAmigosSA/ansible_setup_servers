@@ -1,0 +1,73 @@
+---
+- name: Add user accounts and setup SSH keys
+  ansible.builtin.user:
+    name: "{{ item.key }}"
+    state: present
+    create_home: yes
+    shell: /bin/zsh
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+
+- name: Grant sudo access to specified users
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    line: "{{ item.key }} ALL=(ALL) NOPASSWD:ALL"
+    validate: visudo -cf %s
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+  when: item.value.sudo | default(false)
+
+- name: Add SSH public keys for specified users
+  ansible.builtin.authorized_key:
+    user: "{{ item.key }}"
+    state: present
+    key: "{{ item.value.ssh_key }}"
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+  when: item.value.ssh_key is defined
+
+# Oh-my-zsh
+- name: Clone Oh-My-Zsh repository
+  git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: "/home/{{ item.key }}/.oh-my-zsh"
+    update: true
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+
+- name: Clone powerlevel10k
+  git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "/home/{{ item.key }}/.oh-my-zsh/themes/powerlevel10k"
+    update: true
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+  
+
+- name: Clone zsh-syntax-highlighting
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "/home/{{ item.key }}/.oh-my-zsh/plugins/zsh-syntax-highlighting"
+    update: true
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+  
+
+- name: Clone zsh-autosuggestions
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    dest: "/home/{{ item.key }}/.oh-my-zsh/plugins/zsh-autosuggestions"
+    update: true
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+  
+
+- name: Change user's shell to Zsh
+  shell: usermod --shell /usr/bin/zsh {{ item.key }}
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+
+- name: Copy custom zshrc
+  template:
+    src: zshrc
+    dest: "/home/{{ item.key }}/.zshrc"
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+
+- name: Copy custom powerlevel10k config
+  copy:
+    src: p10k
+    dest: "/home/{{ item.key }}/.p10k.zsh"
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+  

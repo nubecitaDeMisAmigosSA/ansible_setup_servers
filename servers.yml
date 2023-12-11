@@ -1,0 +1,24 @@
+---
+- name: Basic configuration
+  hosts: all
+  become: true
+  roles:
+    - role: basic
+  tags:
+    - basic
+
+- name: User configuration
+  hosts: all
+  become: true
+  roles:
+    - role: users
+  tags:
+    - users
+
+- name: Harden server
+  become: true
+  hosts: all
+  roles:
+    - role: harden
+  tags:
+    - harden

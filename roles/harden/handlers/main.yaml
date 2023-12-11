@@ -1,0 +1,9 @@
+- name: Reload SSH
+  service:
+    name: sshd
+    state: reloaded
+
+- name: restart fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted
