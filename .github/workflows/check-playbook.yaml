@@ -53,7 +53,7 @@ jobs:
             `;
 
             // Retrieve existing comments for the PR
-            const { data: comments } = await github.rest.issues.listComments({
+            const { data: comments } = await .issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
@@ -66,7 +66,7 @@ jobs:
 
             if (botComment) {
               // If a comment exists, update it
-              github.issues.updateComment({
+              github.rest.issues.updateComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: botComment.id,
@@ -74,7 +74,7 @@ jobs:
               });
             } else {
               // If no comment exists, create a new one
-              github.issues.createComment({
+              github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
