@@ -1,0 +1,61 @@
+name: Ansible Check on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ansible-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Ansible
+        run: |
+          pip install ansible
+
+      - name: Run Ansible playbook in check mode
+        id: ansible-check
+        env:
+          ANSIBLE_HOSTS: ${{ secrets.ANSIBLE_HOSTS }}
+          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
+        run: |
+          ansible-playbook --check playbook.yml | tee ansible_output.txt
+
+      - name: Comment on pull request
+        if: always()
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('ansible_output.txt', 'utf8');
+            const context = github.context;
+            const prNumber = context.payload.pull_request.number;
+            const owner = context.payload.repository.owner.login;
+            const repo = context.payload.repository.name;
+            const issueComment = `
+            #### Ansible Check Output:
+            \`\`\`
+            ${output}
+            \`\`\`
+            `;
+            github.issues.createComment({
+              owner: owner,
+              repo: repo,
+              issue_number: prNumber,
+              body: issueComment
+            });
