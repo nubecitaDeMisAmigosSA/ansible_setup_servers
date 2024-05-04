@@ -41,7 +41,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { context, github } = require('@actions/github');
             const output = require('fs').readFileSync('ansible_output.txt', 'utf8');
             const prNumber = context.payload.pull_request.number;
             const owner = context.repo.owner;
