@@ -34,31 +34,52 @@ jobs:
 
       - name: Run Ansible playbook in check mode
         id: ansible-check
-        env:
-          ANSIBLE_HOSTS: ${{ secrets.ANSIBLE_HOSTS }}
-          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
         run: |
           ansible-playbook --check servers.yml | tee ansible_output.txt
 
+      - name: Set Outcomes as Env Vars
+        run: |
+          echo "ANSIBLE_OUTCOME=$(cat ansible_output.txt)" >> $GITHUB_ENV
+
       - name: Comment on pull request
         if: always()
-        uses: actions/github-script@v4
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = require('fs').readFileSync('ansible_output.txt', 'utf8');
-            const prNumber = context.payload.pull_request.number;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const issueComment = `
+            const output = `
             #### Ansible Check Output:
             \`\`\`
-            ${output}
+            ${process.env.ANSIBLE_OUTCOME}
             \`\`\`
             `;
-            github.issues.createComment({
-              owner: owner,
-              repo: repo,
-              issue_number: prNumber,
-              body: issueComment
+
+            // Retrieve existing comments for the PR
+            const { data: comments } = await github.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
             });
+
+            // Check if a comment from the bot already exists
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Ansible Check Output');
+            });
+
+            if (botComment) {
+              // If a comment exists, update it
+              github.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              });
+            } else {
+              // If no comment exists, create a new one
+              github.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: output
+              });
+            }
