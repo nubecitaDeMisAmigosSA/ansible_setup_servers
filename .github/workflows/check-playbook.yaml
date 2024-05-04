@@ -33,7 +33,7 @@ jobs:
           ANSIBLE_HOSTS: ${{ secrets.ANSIBLE_HOSTS }}
           ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
         run: |
-          ansible-playbook --check playbook.yml | tee ansible_output.txt
+          ansible-playbook --check server.yml | tee ansible_output.txt
 
       - name: Comment on pull request
         if: always()
@@ -41,12 +41,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const fs = require('fs');
-            const output = fs.readFileSync('ansible_output.txt', 'utf8');
-            const context = github.context;
+            const { context, github } = require('@actions/github');
+            const output = require('fs').readFileSync('ansible_output.txt', 'utf8');
             const prNumber = context.payload.pull_request.number;
-            const owner = context.payload.repository.owner.login;
-            const repo = context.payload.repository.name;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
             const issueComment = `
             #### Ansible Check Output:
             \`\`\`
