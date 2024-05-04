@@ -33,7 +33,7 @@ jobs:
           ANSIBLE_HOSTS: ${{ secrets.ANSIBLE_HOSTS }}
           ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
         run: |
-          ansible-playbook --check server.yml | tee ansible_output.txt
+          ansible-playbook --check servers.yml | tee ansible_output.txt
 
       - name: Comment on pull request
         if: always()
