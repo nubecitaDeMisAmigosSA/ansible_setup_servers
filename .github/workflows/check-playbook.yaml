@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: write
+  contents: read
+  id-token: write
+
 jobs:
   ansible-check:
     runs-on: ubuntu-latest
