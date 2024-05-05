@@ -70,7 +70,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: botComment.id,
-                body: output
+                body: issueComment
               });
             } else {
               // If no comment exists, create a new one
@@ -78,6 +78,6 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                body: output
+                body: issueComment
               });
             }
