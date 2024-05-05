@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 jobs:
-  ansible-check:
+  ansible-apply:
     runs-on: ubuntu-latest
     env:
       ANSIBLE_HOST: ${{ vars.ANSIBLE_HOST || 'nubecita.dev' }}
