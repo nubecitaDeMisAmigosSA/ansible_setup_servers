@@ -29,6 +29,11 @@
 - name: Import install role
   import_role:
     name: basic-install
+  vars:
+    # Mapping common architecture names to those expected by repositories
+    arch_mapping:
+      x86_64: amd64
+      aarch64: arm64
 
 # Log rotation
 - name: Set up logrotate for daemon.log and syslog

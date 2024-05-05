@@ -32,9 +32,13 @@
     dest: /etc/apt/keyrings/docker.asc
     mode: "a+r"
 
+- name: Determine architecture for Docker repo
+  set_fact:
+    docker_arch: "{{ arch_mapping[ansible_architecture] | default(ansible_architecture) }}"
+
 - name: Add Docker repository
   apt_repository:
-    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release | default(omit) }} stable"
+    repo: "deb [arch={{ docker_arch }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release | default(omit) }} stable"
     state: present
     filename: docker
     update_cache: yes
@@ -49,3 +53,5 @@
       - docker-compose-plugin
     state: latest
     update_cache: yes
+  notify:
+    - enable docker
