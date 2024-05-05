@@ -39,7 +39,7 @@ jobs:
       - name: Run Ansible playbook in check mode
         id: ansible-check
         run: |
-          ansible-playbook -i $ANSIBLE_HOSTS, -e ansible_user=$ANSIBLE_USER -e timezone=$TIMEZONE --check servers.yml | tee ansible_output.txt
+          ansible-playbook -e ansible_user=$ANSIBLE_USER -e ansible_host=$ANSIBLE_HOSTS -e timezone=$TIMEZONE --check servers.yml | tee ansible_output.txt
 
       - name: Comment on pull request
         if: always()
