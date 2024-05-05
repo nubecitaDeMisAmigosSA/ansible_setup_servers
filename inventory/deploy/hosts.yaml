@@ -1,11 +1,10 @@
 all:
   hosts:
     nubecita.remote:
-      ansible_host: 95.216.189.62
+      ansible_host: nubecita.dev
   vars:
-    ansible_user: root
-    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
-    timezone: 'Europe/Madrid'
+    ansible_user: runner
+    timezone: "Europe/Madrid"
 
   children:
     hetzner:
@@ -15,6 +14,6 @@ all:
             larry:
               sudo: true
               ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG9K27LQ9VewIvxAcrR01VEw0/IpaRXuO19WhyT9372r larrywtf609@gmail.com"
-            hian:
+            runner:
               sudo: true
-              ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMO4jL8vJpJyBrSVWi9VGlxR9QnR8FIgoww61Z/91tytbcLFa7FMwjvAbKqZ/2uUHr3ohfMtYX6OvINu1Ya17BGx/NwUwbzBGBn+3AZAPfFyElDtHnKR+q8TfVlJI58KTTdXq7BE0z2ZKtGfuzIQ9gYRBkUF29UeMpMnLAWlqzi8p+ZJjjRzLBp2eKoNjlhTPYoI7wIz2jouY1yRoOv8H4EbCFXXeG6jKdQufyyuv+Gj6eC2bsuOS/cSXYu72nXUnFp5DnrOnJwv3lAG5vsee8qlUC4gV7b2umjmj0tkQ6l0wEW0JVycveGAbYtk5X9jHss9JcdN+LlYrSwbaH+X9T hiancdtrsnm@gmail.com"
+              ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDTJ15E3ljGVcMfjhKPgheEocDny0ZXurRbzA/AD3ajuGmo040/kwG5yJDp9o/qjrG5OOt9z4td6GfJtxy5uZwLhKIT3c8INOHDthvJT5lSkoCHjH5qVnFwn7YTJrVUUGMJk1qgfq47fthrf3aOt2gUbxisPrAUd3aLOXkNlauni/CdZqrG8hbsvoUjgpy09URyrY6IyBR2I4gV7CRuaNO2jVW87lduv8ckuNrQAfhEG2rWKvpxLi9S8BKp1Q9vemg8lXEXl2BmSSJ773y9WTMmi/jnmQ0WS06pUwkV/Cet4C4shuzI46QD/n/aDZbzZb4RMT6rI2LpVyIRbb8f6HLFDqQ4SVMIycG02wm1SeAvHkdvnRFYDWrEPg774a401wAKboNvOf4Qw1FvB3i2UyUOsksurJZxvnehY77GmX/qFHHhQKqDBsb6JN9MPM5KEDe++IMuVE8DwB+4XlgVRenofv2zIMGexxXlw8yu/HPKbUsuAVjA+E/vS3rO65qReqzoebaDFGeGB89QjjurQOxdtwoOv2Amj1vM/CmTWhyt6UK8JJU8pJ87dB4wglvEQFUfXgVeSJfYy4KbQlBUWF2iu4t3UjcTZbFO3uOG2DNpl7z2T6bUN5cztOlTudpWVv86hmEAcdeeQzetvjNaWMpPhbFU2X79JYB1ciNxOu/rbQ== runner@github.com"
