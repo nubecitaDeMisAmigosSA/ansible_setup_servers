@@ -68,10 +68,14 @@
   template:
     src: zshrc
     dest: "/home/{{ item.key }}/.zshrc"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
 
 - name: Copy custom powerlevel10k config
   copy:
     src: p10k
     dest: "/home/{{ item.key }}/.p10k.zsh"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
