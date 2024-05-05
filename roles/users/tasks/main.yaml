@@ -1,10 +1,18 @@
 ---
+# Docker
+- name: Create the docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
 - name: Add user accounts and setup SSH keys
   ansible.builtin.user:
     name: "{{ item.key }}"
     state: present
     create_home: yes
     shell: /bin/zsh
+    groups: docker
+    append: yes
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
 
 - name: Grant sudo access to specified users
@@ -37,7 +45,6 @@
     dest: "/home/{{ item.key }}/.oh-my-zsh/themes/powerlevel10k"
     update: true
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
-  
 
 - name: Clone zsh-syntax-highlighting
   git:
@@ -45,7 +52,6 @@
     dest: "/home/{{ item.key }}/.oh-my-zsh/plugins/zsh-syntax-highlighting"
     update: true
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
-  
 
 - name: Clone zsh-autosuggestions
   git:
@@ -53,7 +59,6 @@
     dest: "/home/{{ item.key }}/.oh-my-zsh/plugins/zsh-autosuggestions"
     update: true
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
-  
 
 - name: Change user's shell to Zsh
   shell: usermod --shell /usr/bin/zsh {{ item.key }}
@@ -70,4 +75,3 @@
     src: p10k
     dest: "/home/{{ item.key }}/.p10k.zsh"
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
-  

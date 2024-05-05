@@ -1,7 +1,9 @@
 ---
-
 - name: enable ntp
   service: name=ntp state=started enabled=yes
 
 - name: enable NetworkManager
   service: name=NetworkManager state=started enabled=yes
+
+- name: enable docker
+  service: name=docker state=restarted enabled=yes
