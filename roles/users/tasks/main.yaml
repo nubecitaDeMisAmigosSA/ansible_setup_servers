@@ -32,6 +32,15 @@
   when: item.value.ssh_key is defined
 
 # Oh-my-zsh
+- name: Configure Git to allow operation in home directories
+  become: true
+  become_user: "{{ item.key }}"
+  git_config:
+    name: safe.directory
+    scope: global
+    value: "/home/{{ item.key }}/.oh-my-zsh"
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+
 - name: Clone Oh-My-Zsh repository
   git:
     repo: https://github.com/ohmyzsh/ohmyzsh.git
@@ -70,6 +79,8 @@
     dest: "/home/{{ item.key }}/.zshrc"
     owner: "{{ item.key }}"
     group: "{{ item.key }}"
+  vars:
+    user: "{{ item.key }}"
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
 
 - name: Copy custom powerlevel10k config
