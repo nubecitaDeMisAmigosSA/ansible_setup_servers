@@ -1,3 +1,3 @@
 - ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 - copy private key and public key, set private key as ANSIBLE_PRIVATE_KEY repo secret
-- create repo vars ANSIBLE_HOST ANSIBLE_USER TIMEZONE
+- create repo vars ANSIBLE_HOSTS ANSIBLE_USER TIMEZONE ($ANSIBLE_HOSTS can be a comma separated list of hosts: `host1,host2`)
