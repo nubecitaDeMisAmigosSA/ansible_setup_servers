@@ -46,11 +46,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = require('fs').readFileSync('ansible_output.txt', 'utf8');
+            // Remove ANSI escape codes (color information) using regex
+            const cleanedOutput = output.replace(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/g, '');
 
             const issueComment = `
             #### Ansible Check Output:
             \`\`\`
-            ${output}
+            ${cleanedOutput}
             \`\`\`
             `;
 
