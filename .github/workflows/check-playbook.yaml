@@ -13,6 +13,10 @@ permissions:
 jobs:
   ansible-check:
     runs-on: ubuntu-latest
+    env:
+      ANSIBLE_HOST: ${{ vars.ANSIBLE_HOST || 'nubecita.dev' }}
+      ANSIBLE_USER: ${{ vars.ANSIBLE_USER || 'runner' }}
+      TIMEZONE: ${{ vars.TIMEZONE || 'Europe/Madrid' }}
 
     steps:
       - name: Checkout repository
@@ -35,7 +39,7 @@ jobs:
       - name: Run Ansible playbook in check mode
         id: ansible-check
         run: |
-          ansible-playbook --check servers.yml | tee ansible_output.txt
+          ansible-playbook -e ansible_user=$ANSIBLE_USER -e ansible_host=$ANSIBLE_HOST -e timezone=$TIMEZONE --check servers.yml | tee ansible_output.txt
 
       - name: Comment on pull request
         if: always()
