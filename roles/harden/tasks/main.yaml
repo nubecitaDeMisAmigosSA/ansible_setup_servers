@@ -18,7 +18,7 @@
     dest: /etc/fail2ban/jail.local
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   notify:
     - restart fail2ban
 
@@ -27,3 +27,20 @@
     name: fail2ban
     state: started
     enabled: yes
+
+- name: Ensure ufw service is running and enabled
+  ansible.builtin.service:
+    name: ufw
+    state: started
+    enabled: yes
+
+- name: Allow SSH access
+  ansible.builtin.ufw:
+    rule: allow
+    name: "OpenSSH"
+
+- name: Allow HTTPS traffic
+  ansible.builtin.ufw:
+    rule: allow
+    port: "443"
+    proto: tcp

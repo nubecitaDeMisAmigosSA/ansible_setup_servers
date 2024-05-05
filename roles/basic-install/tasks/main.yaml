@@ -18,6 +18,8 @@
       - lsb-release
     state: present
     update_cache: yes
+  notify:
+    - enable ufw
 
 # Install Docker
 - name: Create Docker's apt repository keyring directory
@@ -44,7 +46,7 @@
     update_cache: yes
 
 - name: Install Docker Engine, CLI, and Plugins
-  apt:
+  package:
     name:
       - docker-ce
       - docker-ce-cli

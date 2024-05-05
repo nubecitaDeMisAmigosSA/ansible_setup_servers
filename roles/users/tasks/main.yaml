@@ -79,3 +79,11 @@
     owner: "{{ item.key }}"
     group: "{{ item.key }}"
   loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"
+
+- name: Change ownership of all files and directories in user's home
+  ansible.builtin.file:
+    path: "/home/{{ item.key }}"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    recurse: yes
+  loop: "{{ hostvars[inventory_hostname]['users'] | dict2items }}"

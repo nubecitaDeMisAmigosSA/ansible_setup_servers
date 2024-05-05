@@ -7,3 +7,6 @@
 
 - name: enable docker
   service: name=docker state=restarted enabled=yes
+
+- name: enable ufw
+  service: name=ufw state=started enabled=yes
