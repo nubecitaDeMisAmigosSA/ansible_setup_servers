@@ -15,7 +15,9 @@
       - curl
       - software-properties-common
       - ufw
+      - lsb-release
     state: present
+    update_cache: yes
 
 # Install Docker
 - name: Create Docker's apt repository keyring directory
@@ -35,6 +37,7 @@
     repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release | default(omit) }} stable"
     state: present
     filename: docker
+    update_cache: yes
 
 - name: Install Docker Engine, CLI, and Plugins
   apt:
