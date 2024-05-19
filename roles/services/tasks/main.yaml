@@ -26,7 +26,7 @@
   become_user: "{{ user }}"
 
 - name: Run docker-compose up for each service
-  command: docker-compose up -d
+  command: docker compose up -d
   args:
     chdir: "/home/{{ user }}/{{ base_path }}/{{ item.path | basename }}"
   with_items: "{{ service_dirs.files }}"
