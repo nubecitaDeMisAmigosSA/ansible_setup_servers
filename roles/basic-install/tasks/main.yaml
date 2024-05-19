@@ -16,6 +16,7 @@
       - software-properties-common
       - ufw
       - lsb-release
+      - rsync
     state: present
     update_cache: yes
   notify:

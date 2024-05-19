@@ -22,3 +22,13 @@
     - role: harden
   tags:
     - harden
+
+- name: Dockerized services
+  become: true
+  hosts: all
+  roles:
+    - role: services
+  tags:
+    - services
+  vars:
+    user: "larry"

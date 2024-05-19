@@ -1,0 +1,34 @@
+---
+- name: Ensure the destination directory exists
+  file:
+    path: "/home/{{ user }}/{{ base_path }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+
+- name: Get list of service directories
+  find:
+    paths: "{{ role_path }}/files/services"
+    file_type: directory
+    recurse: false
+  become: true
+  become_user: "{{ansible_user}}"
+  register: service_dirs
+  delegate_to: localhost
+
+- name: Copy entire service directories to remote server
+  synchronize:
+    src: "{{ item.path }}/"
+    dest: "/home/{{ user }}/{{ base_path }}/{{ item.path | basename }}/"
+    recursive: yes
+  with_items: "{{ service_dirs.files }}"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: Run docker-compose up for each service
+  command: docker-compose up -d
+  args:
+    chdir: "/home/{{ user }}/{{ base_path }}/{{ item.path | basename }}"
+  with_items: "{{ service_dirs.files }}"
+  become: yes
+  become_user: "{{ user }}"
