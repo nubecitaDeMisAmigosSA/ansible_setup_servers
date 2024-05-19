@@ -6,9 +6,27 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:9000:9000"
+    networks:
+      - services
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    # (optional) These labels are for Homepage automatic integration
+    labels:
+      - homepage.group=Services
+      - homepage.name=Portainer
+      # https://github.com/walkxcode/dashboard-icons/tree/main/svg
+      - homepage.icon=portainer
+      - homepage.href=https://portainer.nubecita.dev
+      - homepage.widget.type=portainer
+      - homepage.widget.env=2
+      - homepage.widget.url=https://portainer:9443
+      - homepage.widget.key=ptr_PG/A97mkRuEeoqI/L7bBveuOXYLn/jEqk9+qsQpXXJQ=
 
 volumes:
   portainer_data:
+
+networks:
+  services:
+    name: services
+    external: true

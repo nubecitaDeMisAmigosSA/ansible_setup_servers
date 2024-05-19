@@ -25,6 +25,11 @@
   become: yes
   become_user: "{{ user }}"
 
+- name: Create custom Docker network
+  docker_network:
+    name: services
+    driver: bridge
+
 - name: Run docker-compose up for each service
   command: docker compose up -d
   args:
